@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # 1. MySQL Database Container
+  mysqldb:
+    image: mysql:8.0
+    container_name: mysqldb
+    environment:
+      MYSQL_DATABASE: consultation_db
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-network
+
+  # 2. Spring Boot Backend Container
+  backend:
+    build: ./consultation-platform/consultation-platform
+    container_name: springboot-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/consultation_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  # 3. React Frontend Container
+  frontend:
+    build: ./consultation-frontend
+    container_name: react-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
