@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-// Directly default to your live Render backend for cloud deployments
-const BASE_URL = 'https://medical-backend-wvj9.onrender.com/api';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://medical-backend-wvj9.onrender.com/api';
 
 const API = axios.create({
   baseURL: BASE_URL,

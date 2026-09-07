@@ -1,6 +1,11 @@
 # Stage 1: Build React App
 FROM node:20-alpine AS build
 WORKDIR /app
+
+# Accept backend URL during build (defaults to live Render backend)
+ARG VITE_API_BASE_URL=https://medical-backend-wvj9.onrender.com/api
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 COPY package*.json ./
 RUN npm install
 COPY . .
