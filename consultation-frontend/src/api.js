@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+// Dynamically use live Render backend in production, fallback to localhost for development
+const BASE_URL = import.meta.env.PROD
+  ? 'https://medical-backend-wvj9.onrender.com/api'
+  : 'http://localhost:8080/api';
+
 const API = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },

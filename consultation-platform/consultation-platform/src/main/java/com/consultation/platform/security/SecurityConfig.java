@@ -37,12 +37,12 @@ public class SecurityConfig {
                         // Public auth endpoints
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        // Allow any authenticated user (Patient or Doctor) access to assessments and pdf
+                        // Allow any authenticated user (Patient or Doctor) access to assessments and
+                        // pdf
                         .requestMatchers("/api/assessments/**").authenticated()
                         .requestMatchers("/api/pdf/**").authenticated()
 
-                        .anyRequest().authenticated()
-                );
+                        .anyRequest().authenticated());
 
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -52,7 +52,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("*"));
+
+        // Explicitly allowed origins (Local dev + Live Render Frontend)
+        config.setAllowedOrigins(List.of(
+                "http://localhost:5173",
+                "http://localhost",
+                "https://medical-frontend-jpm3.onrender.com"));
+
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
         config.setAllowCredentials(true);
