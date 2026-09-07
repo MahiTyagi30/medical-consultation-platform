@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # 1. MySQL Database Container
   mysqldb:
@@ -7,11 +5,11 @@ services:
     container_name: mysqldb
     environment:
       MYSQL_DATABASE: consultation_db
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: "123456"
     ports:
       - "3307:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p123456"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -27,7 +25,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/consultation_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_PASSWORD: "123456"
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
     depends_on:
       mysqldb:
